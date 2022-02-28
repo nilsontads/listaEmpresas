@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>home</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3>Cadastro de Empresas </h3>
+<form action="" id="cadastroEmpresas">
+
+<div class="mb-3">
+  <label for="id" class="form-label">Id</label>
+  <input type="text" class="form-control" id="id" readonly="readonly">
+</div>
+
+<div class="mb-3">
+  <label for="nome" class="form-label">Nome</label>
+  <input type="text" class="form-control" id="nome" placeholder="Informe um nome!" rows="3">
+</div>
+
+<div class="mb-3">
+  <label for="email" class="form-label">Email</label>
+  <input type="email" class="form-control" id="email" placeholder="name@example.com">
+</div>
+
+<div class="mb-3">
+  <label for="empresa" class="form-label">Empresa</label>
+  <input type="text" class="form-control" id="empresa" placeholder="empresa" rows="3">
+</div>
+
+<div class="mb-3">
+  <label for="cnpj" class="form-label">Cnpj</label>
+  <input type="text" class="form-control" id="cnpj" placeholder="cnpj" rows="3">
+</div>
+
+
+</form>
+<button type="button" class="btn btn-primary" onclick="salvarEmpresa()">Salvar</button>
+<button type="button" class="btn btn-secondary" onclick="document.getElementById('cadastroEmpresas').reset()">Novo</button>
+<button type="button" class="btn btn-danger" data-bs-toggle = "modal" data-bs-target="#modalConsulta">Pesquisar</button>
+
+
+<div class="modal fade" id="modalConsulta" tabindex="-1" aria-labelledby="modalConsulta" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Consulta Empresa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="nomeBusca" class="col-form-label">Nome :</label>
+            <input type="text" class="form-control" id="nomeBusca">
+          </div>
+          <button type="button" class="btn btn-success" onclick="buscaEmpresa()">Buscar</button>
+        </form>
+        
+        
+  <table class="table" id="tabelaConsulta">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">nome</th>
+      <th scope="col">email</th>
+      <th scope="col">empresa</th>
+      <th scope="col">cnpj</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+  </tbody>
+</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+<script type="text/javascript">
+
+function buscaEmpresa(){
+	var nome = $('#nomeBusca').val();
+	
+	if(nome != null && nome.trim != ''){
+		
+		$.ajax({
+			  method: "GET",
+			  url: "buscarPorNome",
+			  data: "nome = " + nome,
+			  success: function(response){
+				  
+				 $('#tabelaConsulta > tbody > tr').remove();
+				  for(var i = 0; i < response.length; i++ ){
+				 $( '#tabelaConsulta > tbody').append('<tr><>td'+response[i].id+'</td></tr>');
+			  }
+			  }
+			}).fail(function(xhr,status,erroThrown){
+				alert("erro ao buscar!"+nome);			
+			});
+		
+	}
+}
+
+function salvarEmpresa(){
+	var id = $("#id").val();
+	var nome = $("#nome").val();
+	var email = $("#email").val();
+	var empresa = $("#empresa").val();
+	var cnpj = $("#cnpj").val();
+	
+	$.ajax({
+		  method: "POST",
+		  url: "salvar",
+		  data: JSON.stringify({id:id,nome:nome,email:email,empresa:empresa,cnpj:cnpj}),
+		  contentType:"application/json; charset=utf-8",
+		  success: function(response){
+			  alert("salvo com sucesso!");
+		  }
+		}).fail(function(xhr,status,erroThrown){
+			alert("erro ao salvar!");			
+		});
+	
+	
+	
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
